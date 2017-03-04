@@ -17,3 +17,13 @@ client dir
 
 server
     server code dir.
+
+
+
+
+
+
+
+github.com
+    git@github.com:hulizhong/pro.git
+
