@@ -9,6 +9,7 @@
 #define _TCPSOCKETSERVER_H
 
 #include <netinet/in.h>
+#include <string>
 
 #define SOCKET_SERVER_PORT 8899
 #define SOCKET_SERVER_BUFFER_LEN 1024
@@ -18,7 +19,7 @@
 class TcpSocketServer
 {
 public:
-    TcpSocketServer();
+    TcpSocketServer(std::string ip);
     ~TcpSocketServer();
     bool start();
 

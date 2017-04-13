@@ -11,7 +11,7 @@ using namespace std;
 
 int main(void)
 {
-    TcpSocketServer tcpSer = TcpSocketServer();
+    TcpSocketServer tcpSer = TcpSocketServer("172.22.48.101");
     bool res = tcpSer.start();
     if (!res)
     {

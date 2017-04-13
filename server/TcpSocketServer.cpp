@@ -14,11 +14,12 @@
 #include <unistd.h>
 
 
-TcpSocketServer::TcpSocketServer()
+TcpSocketServer::TcpSocketServer(std::string ip)
 {
     memset(&mAddr,0,sizeof(mAddr));  
     mAddr.sin_family = AF_INET;  
-    mAddr.sin_addr.s_addr = htonl(INADDR_ANY);  
+    //mAddr.sin_addr.s_addr = htonl(INADDR_ANY);  
+    mAddr.sin_addr.s_addr = inet_addr(ip.c_str());  
     mAddr.sin_port = htons(SOCKET_SERVER_PORT);  
 }
 

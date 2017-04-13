@@ -9,13 +9,18 @@
 #include <string.h>
 #include <iostream>
 #include <unistd.h>
+#include <fstream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 
-TcpSocketClient::TcpSocketClient()
+TcpSocketClient::TcpSocketClient(std::string serip)
 {
     memset(&mSerAddr,0,sizeof(mSerAddr));  
     mSerAddr.sin_family = AF_INET;  
-    mSerAddr.sin_addr.s_addr = htonl(INADDR_ANY);  
+    //mSerAddr.sin_addr.s_addr = htonl(INADDR_ANY);  
+    mSerAddr.sin_addr.s_addr = inet_addr(serip.c_str());  
     mSerAddr.sin_port = htons(SOCKET_SERVER_PORT);  
 }
 
@@ -41,7 +46,8 @@ bool TcpSocketClient::start()
 
 bool TcpSocketClient::sendEchoMsg()
 {
-    char buffer[SOCKET_SERVER_BUFFER_LEN] = {"1111111"};  
+    char buffer[SOCKET_SERVER_BUFFER_LEN] = {0};  
+    strcpy(buffer, getUUID().c_str());
     int res = connect(mFd, (struct sockaddr*)&mSerAddr,sizeof(mSerAddr));
     if (res < 0)
     {
@@ -80,3 +86,18 @@ bool TcpSocketClient::sendEchoMsg()
     close(mFd); 
     return true;
 }
+
+std::string TcpSocketClient::getUUID()
+{
+    std::ifstream ifs("/proc/sys/kernel/random/uuid");  
+    if (!ifs.is_open())  
+    {
+        return std::string("default_uuid");
+    } 
+    char uuid[64] = {0};
+    ifs.getline(uuid, 63, '-');
+    ifs.close();
+    return std::string(uuid);
+    //return std::move(string(uuid));
+}
+

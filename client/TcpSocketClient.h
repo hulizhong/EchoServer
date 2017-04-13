@@ -14,16 +14,19 @@
 #define SOCKET_SERVER_RECV_BUFFER_LEN 1024
 
 #include <netinet/in.h>
+#include <string>
 
 class TcpSocketClient
 {
 public:
-    TcpSocketClient();
+    TcpSocketClient(std::string serip);
     ~TcpSocketClient();
     bool start();
 
 protected:
     bool sendEchoMsg();
+    //std::string&& getUUID();
+    std::string getUUID();
 
 private:
     int mFd;

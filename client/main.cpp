@@ -12,7 +12,7 @@ using namespace std;
 
 int main(void)
 {
-    TcpSocketClient echoCli = TcpSocketClient();
+    TcpSocketClient echoCli = TcpSocketClient("172.22.48.101");
     bool res = echoCli.start();
     if (!res)
         std::cout << "EchoClient start failed." << std::endl;
