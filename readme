@@ -21,9 +21,12 @@ server
 
 
 
+version control:
+    v1.0.0  base function can ok. (single thread, no io reuse.)
 
 
 
 github.com
     git@github.com:hulizhong/pro.git
+
 
