@@ -56,7 +56,8 @@ bool TcpSocketClient::sendEchoMsg()
         return false;
     }
 
-    res = send(mFd, buffer, sizeof(buffer), 0);
+    //res = send(mFd, buffer, sizeof(buffer), 0); //will send SOCKET_SERVER_BUFFER_LEN even if no enough data.
+    res = send(mFd, buffer, strlen(buffer), 0);
     if (res > 0)
     {
         std::cout << "EchoClient SEND: " << buffer << std::endl;  

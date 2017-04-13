@@ -12,7 +12,10 @@
 #include <iostream>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <errno.h>
 
+
+//#define BindApiCanReuse
 
 TcpSocketServer::TcpSocketServer(std::string ip)
 {
@@ -35,8 +38,24 @@ bool TcpSocketServer::start()
     {
         return false;
     }  
+    
+    #ifdef BindApiCanReuse
+    /**
+     * 从代码的角度来修改：
+     * process bind() failed.  ----> Address already in use
+     *
+     * 从系统配置的角度来修改：（以下两项均要同时开启）
+     * net.ipv4.tcp_tw_reuse = 1表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭；
+     * net.ipv4.tcp_tw_recycle = 1表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。
+     * 注：/proc/sys/net/ipv4/tcp_fin_timeout = 60
+     * */
+    int reuse = 1;
+    setsockopt(mFd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+    #endif
+
     if( bind(mFd,(sockaddr*) &mAddr,sizeof(mAddr)) < 0 ) 
     {
+        std::cout << "bind failed: " << strerror(errno) << std::endl;
         return false;
     }  
 
