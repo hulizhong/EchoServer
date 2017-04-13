@@ -1,4 +1,4 @@
-set(APP_SRC main.cpp)
+set(APP_SRC TcpSocketClient.cpp main.cpp)
 #set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/bin)
 add_executable(cli ${APP_SRC})
