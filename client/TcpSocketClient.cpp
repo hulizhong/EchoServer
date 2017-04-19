@@ -51,7 +51,7 @@ bool TcpSocketClient::sendEchoMsg()
     int res = connect(mFd, (struct sockaddr*)&mSerAddr,sizeof(mSerAddr));
     if (res < 0)
     {
-        std::cout << "connect to EchoServer failed." << std::endl;
+        std::cout << "connect to EchoServer failed. " << res << std::endl;
         close(mFd); 
         return false;
     }
@@ -64,7 +64,7 @@ bool TcpSocketClient::sendEchoMsg()
     }  
     else if (res < 0)
     {
-        std::cout << "send echoMsg failed." << std::endl;  
+        std::cout << "send echoMsg failed. " << res << std::endl;  
         close(mFd); 
         return false;
     }
@@ -82,7 +82,7 @@ bool TcpSocketClient::sendEchoMsg()
     else if (res == 0)
         std::cout << "EchoServer close connection." << std::endl;  
     else
-        std::cout << "recv data from EchoServer failed!" << std::endl;  
+        std::cout << "recv data from EchoServer failed!" << res << std::endl;  
 
     close(mFd); 
     return true;

@@ -90,6 +90,7 @@ bool TcpSocketServer::doEchoWork()
         if (res > 0)
         {
             std::cout << "EchoServer RECV: " << buffer << std::endl;  
+            usleep(100000);//echoserver process every request time.
             res = send(cliFd, buffer, res, 0);
             if (res > 0)
                 std::cout << "EchoServer SEND: " << buffer << std::endl;  
