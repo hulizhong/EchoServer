@@ -38,8 +38,10 @@ bool TcpSocketClient::start()
     }  
 
     bool res = sendEchoMsg();
-    //if (!res)
-    //    std::cout << "sendEchoMsg failed!" << std::endl;  
+    for (int i=0; i<10; i++)
+        res = sendEchoMsg();
+    if (!res)
+        std::cout << "sendEchoMsg failed!" << std::endl;  
 
     return true;
 }
@@ -48,12 +50,25 @@ bool TcpSocketClient::sendEchoMsg()
 {
     char buffer[SOCKET_SERVER_BUFFER_LEN] = {0};  
     strcpy(buffer, getUUID().c_str());
-    int res = connect(mFd, (struct sockaddr*)&mSerAddr,sizeof(mSerAddr));
-    if (res < 0)
+
+    int res = 0;
+    int e = 0;
+    /*
+    socklen_t elen = sizeof(e);
+    getsockopt(mFd, SOL_SOCKET, SO_ERROR, (void*)&e, &elen);
+    std::cout << strerror(e) << " " << e << std::endl;
+    */
+    e = recv(mFd, NULL, 0, MSG_PEEK);
+    if (e != 0)
     {
-        std::cout << "connect to EchoServer failed. " << res << std::endl;
-        close(mFd); 
-        return false;
+        res = connect(mFd, (struct sockaddr*)&mSerAddr,sizeof(mSerAddr));
+        if (res < 0)
+        {
+            std::cout << "connect to EchoServer failed. " << res << std::endl;
+            perror("EXT");
+            //close(mFd); 
+            //return false;
+        }
     }
 
     //res = send(mFd, buffer, sizeof(buffer), 0); //will send SOCKET_SERVER_BUFFER_LEN even if no enough data.
@@ -65,6 +80,7 @@ bool TcpSocketClient::sendEchoMsg()
     else if (res < 0)
     {
         std::cout << "send echoMsg failed. " << res << std::endl;  
+        perror("EXT");
         close(mFd); 
         return false;
     }
@@ -75,16 +91,16 @@ bool TcpSocketClient::sendEchoMsg()
         return false;
     }
 
-    memset(buffer, 0, sizeof(buffer));
-    res = recv(mFd, buffer, sizeof(buffer), 0);
-    if (res > 0)
-        std::cout << "EchoClient RECV: " << buffer << std::endl;  
-    else if (res == 0)
-        std::cout << "EchoServer close connection." << std::endl;  
-    else
-        std::cout << "recv data from EchoServer failed!" << res << std::endl;  
+    //memset(buffer, 0, sizeof(buffer));
+    //res = recv(mFd, buffer, sizeof(buffer), 0);
+    //if (res > 0)
+    //    std::cout << "EchoClient RECV: " << buffer << std::endl;  
+    //else if (res == 0)
+    //    std::cout << "EchoServer close connection." << std::endl;  
+    //else
+    //    std::cout << "recv data from EchoServer failed!" << res << std::endl;  
 
-    close(mFd); 
+    //close(mFd); 
     return true;
 }
 
